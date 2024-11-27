@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCategorizeBudgetDto } from './dto/create-categorize-budget.dto';
+import { CreateCategorizedBudgetDto } from './dto/create-categorize-budget.dto';
 import { UpdateCategorizeBudgetDto } from './dto/update-categorize-budget.dto';
 
 @Injectable()
 export class CategorizeBudgetService {
-  create(createCategorizeBudgetDto: CreateCategorizeBudgetDto) {
+  create(createCategorizedBudgetDto: CreateCategorizedBudgetDto) {
     return 'This action adds a new categorizeBudget';
   }
 

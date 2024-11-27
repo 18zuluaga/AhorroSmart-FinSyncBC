@@ -1,7 +1,8 @@
-import { IsDecimal, IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsDecimal, IsEnum, IsNotEmpty, IsUUID } from 'class-validator';
+import { ExpenseCategory } from 'src/common/enums/expense-category.enum';
 
 export class CreateCategorizedBudgetDto {
-  @IsString()
+  @IsEnum(ExpenseCategory)
   @IsNotEmpty()
   category: string;
 
