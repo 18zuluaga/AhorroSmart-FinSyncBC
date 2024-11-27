@@ -8,8 +8,8 @@ import { PassportModule } from '@nestjs/passport';
 import { User } from 'src/users/entities/user.entity';
 import { UsersModule } from 'src/users/users.module';
 import { UserService } from 'src/users/users.service';
-import { JwtStrategy } from 'src/strategys/jwt.strategy';
-import { AuthGuard } from './guards/auth.guard';
+import { JwtStrategys } from 'src/strategys/jwt.strategy';
+import { JwtAuthGuard } from './guards/auth.guard';
 
 @Module({
   imports: [
@@ -25,6 +25,6 @@ import { AuthGuard } from './guards/auth.guard';
     PassportModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, AuthGuard, JwtStrategy, UserService],
+  providers: [AuthService, JwtStrategys, UserService, JwtAuthGuard],
 })
 export class AuthModule {}
