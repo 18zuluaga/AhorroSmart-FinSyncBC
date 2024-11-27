@@ -1,6 +1,13 @@
 import { Budget } from 'src/budget/entities/budget.entity';
 import { Transaction } from 'src/transaction/entities/transaction.entity';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 
 @Entity('users')
 export class User {
