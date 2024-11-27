@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UserService } from 'src/users/users.service';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -41,7 +46,7 @@ export class AuthService {
     }
   }
 
-  async login(user: Partial<User>) {
+  async login(user: LoginDto) {
     try {
       const verifiedUser: User = await this.validateUser(
         user.email,
@@ -61,17 +66,18 @@ export class AuthService {
   async register(userDto: CreateUserDto) {
     try {
       const hashedPassword = await bcrypt.hash(userDto.password, 10);
-  
+
       const newUser = await this.usersService.create({
         ...userDto,
         password: hashedPassword,
       });
-  
+
       delete newUser.password;
-  
-      const payload = { ...newUser };
-      const token = this.jwtService.sign(payload);
-  
+      const token = this.login({
+        email: newUser.email,
+        password: userDto.password,
+      });
+
       return {
         user: newUser,
         token,
@@ -80,5 +86,4 @@ export class AuthService {
       throw error;
     }
   }
-  
 }
