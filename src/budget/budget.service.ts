@@ -1,15 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
+import { Budget } from './entities/budget.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class BudgetService {
-  create(createBudgetDto: CreateBudgetDto) {
-    return 'This action adds a new budget';
+  constructor(
+    @InjectRepository(Budget)
+    private readonly budgetRepository: Repository<Budget>,
+  ) {}
+
+  async create(createBudgetDto: CreateBudgetDto) {
+    const budget = await this.budgetRepository.create(createBudgetDto);
+    return await this.budgetRepository.save(budget);
   }
 
-  findAll() {
-    return `This action returns all budget`;
+  async findAll() {
+    return await this.budgetRepository.find();
   }
 
   findOne(id: number) {
