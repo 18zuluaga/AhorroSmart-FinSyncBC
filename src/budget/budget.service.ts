@@ -40,6 +40,7 @@ export class BudgetService {
       where: { date: createBudgetDto.date, user: { id: user_id } },
     });
     if (budget) {
+      createBudgetDto.amount = budget.amount + createBudgetDto.amount;
       await this.update(budget.id, createBudgetDto, user_id);
       return;
     } else {
