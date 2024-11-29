@@ -4,7 +4,7 @@ import { UpdateCategorizeBudgetDto } from './dto/update-categorize-budget.dto';
 
 @Injectable()
 export class CategorizeBudgetService {
-  create(createCategorizeBudgetDto: CreateCategorizedBudgetDto) {
+  create(createCategorizedBudgetDto: CreateCategorizedBudgetDto) {
     return 'This action adds a new categorizeBudget';
   }
 

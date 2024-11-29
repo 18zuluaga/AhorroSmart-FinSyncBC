@@ -1,5 +1,7 @@
 import { Budget } from 'src/budget/entities/budget.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { ExpenseCategory } from 'src/common/enums/expense-category.enum';
+import { Transaction } from 'src/transaction/entities/transaction.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity('categorized_budgets')
 export class CategorizedBudget {
@@ -7,7 +9,7 @@ export class CategorizedBudget {
   id: string;
 
   @Column({ type: 'varchar', length: 255 })
-  category: string;
+  category: ExpenseCategory;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;
@@ -15,8 +17,11 @@ export class CategorizedBudget {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalExpenses: number;
 
-  @ManyToOne(() => Budget, (budget) => budget.categorizedBudgets, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Budget, (budget) => budget.categorizedBudgets, { onDelete: 'CASCADE', eager: true })
   budget: Budget;
+
+  @OneToMany(() => Transaction, (transaction) => transaction.categorizedBudget, { onDelete: 'CASCADE' })
+  transactions: Transaction;
 
   @CreateDateColumn()
   createdAt: Date;

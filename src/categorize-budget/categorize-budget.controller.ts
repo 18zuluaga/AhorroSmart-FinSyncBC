@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CategorizeBudgetService } from './categorize-budget.service';
 import { CreateCategorizedBudgetDto } from './dto/create-categorize-budget.dto';
 import { UpdateCategorizeBudgetDto } from './dto/update-categorize-budget.dto';
 
 @Controller('categorize-budget')
 export class CategorizeBudgetController {
-  constructor(private readonly categorizeBudgetService: CategorizeBudgetService) {}
+  constructor(
+    private readonly categorizeBudgetService: CategorizeBudgetService,
+  ) {}
 
   @Post()
   create(@Body() createCategorizeBudgetDto: CreateCategorizedBudgetDto) {
@@ -23,7 +33,10 @@ export class CategorizeBudgetController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategorizeBudgetDto: UpdateCategorizeBudgetDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCategorizeBudgetDto: UpdateCategorizeBudgetDto,
+  ) {
     return this.categorizeBudgetService.update(+id, updateCategorizeBudgetDto);
   }
 

@@ -1,5 +1,7 @@
+import { CategorizedBudget } from 'src/categorize-budget/entities/categorize-budget.entity';
+import { ExpenseCategory } from 'src/common/enums/expense-category.enum';
 import { User } from 'src/users/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 
 @Entity('transactions')
 export class Transaction {
@@ -12,9 +14,6 @@ export class Transaction {
   @Column({ type: 'enum', enum: ['Income', 'Expense'] })
   type: 'Income' | 'Expense';
 
-  @Column({ type: 'varchar', length: 255 })
-  category: string;
-
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;
 
@@ -26,6 +25,10 @@ export class Transaction {
 
   @ManyToOne(() => User, (user) => user.transactions, { onDelete: 'CASCADE' })
   user: User;
+
+  @ManyToOne(() => CategorizedBudget, (categorizedBudget) => categorizedBudget.transactions, { onDelete: 'CASCADE', eager: true })
+  @JoinColumn({name: 'categorized_budget_id'})
+  categorizedBudget: CategorizedBudget;
 
   @CreateDateColumn()
   createdAt: Date;
