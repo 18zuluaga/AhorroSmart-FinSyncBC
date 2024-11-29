@@ -14,7 +14,7 @@ import {
 @Entity('budgets')
 export class Budget {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;
