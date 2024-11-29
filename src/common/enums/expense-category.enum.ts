@@ -9,5 +9,5 @@ export enum ExpenseCategory {
   SAVINGS = "savings",           // Ahorro e Inversiones
   DEBTS = "debts",               // Deudas
   WORK = "work",                 // Trabajo
-  OTHERS = "others"              // Otros
+  OTHERS = "others"
 }
