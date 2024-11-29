@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CategorizeBudgetService } from './categorize-budget.service';
-import { CreateCategorizeBudgetDto } from './dto/create-categorize-budget.dto';
+import { CreateCategorizedBudgetDto } from './dto/create-categorize-budget.dto';
 import { UpdateCategorizeBudgetDto } from './dto/update-categorize-budget.dto';
 
 @Controller('categorize-budget')
@@ -18,7 +18,7 @@ export class CategorizeBudgetController {
   ) {}
 
   @Post()
-  create(@Body() createCategorizeBudgetDto: CreateCategorizeBudgetDto) {
+  create(@Body() createCategorizeBudgetDto: CreateCategorizedBudgetDto) {
     return this.categorizeBudgetService.create(createCategorizeBudgetDto);
   }
 

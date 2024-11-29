@@ -1,4 +1,5 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { ExpenseCategory } from 'src/common/enums/expense-category.enum';
 
 export class CreateTransactionDto {
   @IsString()
@@ -7,10 +8,6 @@ export class CreateTransactionDto {
 
   @IsEnum(['Income', 'Expense'])
   type: 'Income' | 'Expense';
-
-  @IsString()
-  @IsNotEmpty()
-  category: string;
 
   @IsNumber()
   amount: number;
