@@ -126,6 +126,11 @@ export class CategorizeBudgetService {
       }
     }
 
+    categorizedBudget.totalExpenses =
+      categorizedBudget.totalExpenses + updateCategorizeBudgetDto.newExpense;
+    categorizedBudget.totalIncomes =
+      updateCategorizeBudgetDto.newIncome + categorizedBudget.totalIncomes;
+
     return await this.categorizedBudgetRepository.update(
       id,
       updateCategorizeBudgetDto,
