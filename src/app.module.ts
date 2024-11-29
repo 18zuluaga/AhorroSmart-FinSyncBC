@@ -13,9 +13,9 @@ import { CategorizeBudgetModule } from './categorize-budget/categorize-budget.mo
     DatabaseModule,
     UsersModule,
     AuthModule,
-    TransactionModule,
     BudgetModule,
     CategorizeBudgetModule,
+    TransactionModule,
   ],
 })
 export class AppModule {}

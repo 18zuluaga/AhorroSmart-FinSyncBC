@@ -4,6 +4,7 @@ import {
   IsPhoneNumber,
   IsNotEmpty,
   IsObject,
+  MinLength,
 } from 'class-validator';
 import { LatLng } from 'src/common/interfaces/region.interface';
 
@@ -16,14 +17,8 @@ export class RegisterDto {
   @IsNotEmpty()
   email: string;
 
-  @IsPhoneNumber(null)
-  @IsNotEmpty()
-  phoneNumber: string;
-
-  @IsObject()
-  location: LatLng;
-
   @IsString()
   @IsNotEmpty()
+  @MinLength(6)
   password: string;
 }

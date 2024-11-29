@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UserService } from 'src/users/users.service';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -25,10 +25,16 @@ export class AuthService {
 
       if (!user) {
         throw new NotFoundException(
-          'User not found, Verify your credentials or contact your administrator to register',
+          'User not found, Verify your credentials or create an account',
         );
       }
-      const isMatch = await bcrypt.compare(pass, user?.password);
+
+      console.log(user);
+
+      const isMatch = await bcrypt.compare(pass, user.password);
+
+      console.log(isMatch);
+      
       if (!isMatch) {
         throw new NotFoundException(
           'User not found, Verify your credentials or contact your administrator to register',
@@ -63,7 +69,7 @@ export class AuthService {
     }
   }
 
-  async register(userDto: CreateUserDto) {
+  async register(userDto: RegisterDto) {
     try {
       const hashedPassword = await bcrypt.hash(userDto.password, 10);
 

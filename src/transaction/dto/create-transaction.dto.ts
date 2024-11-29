@@ -15,10 +15,6 @@ export class CreateTransactionDto {
   @IsNumber()
   amount: number;
 
-  @IsString()
-  @IsNotEmpty()
-  date: string;
-
   @IsOptional()
   @IsString()
   note?: string;

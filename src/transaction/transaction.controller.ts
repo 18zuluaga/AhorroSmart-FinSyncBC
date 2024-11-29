@@ -1,34 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Patch, Delete, Param, UseGuards, Request } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { JwtAuthGuard } from 'src/auth/guards/auth.guard';
 
-@Controller('transaction')
+@Controller('transactions')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionService.create(createTransactionDto);
+  @UseGuards(JwtAuthGuard)
+  async create(@Body() createTransactionDto: CreateTransactionDto, @Request() req) {
+    return this.transactionService.create(createTransactionDto, req.user);
   }
 
   @Get()
-  findAll() {
-    return this.transactionService.findAll();
+  @UseGuards(JwtAuthGuard)
+  async findAll(@Request() req) {
+    return this.transactionService.findAll(req.user);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionService.findOne(+id);
+  @UseGuards(JwtAuthGuard)
+  async findOne(@Param('id') id: string, @Request() req) {
+    return this.transactionService.findOne(+id, req.user);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTransactionDto: UpdateTransactionDto) {
-    return this.transactionService.update(+id, updateTransactionDto);
+  @UseGuards(JwtAuthGuard)
+  async update(
+    @Param('id') id: string,
+    @Body() updateDto: Partial<CreateTransactionDto>,
+    @Request() req
+  ) {
+    return this.transactionService.update(+id, updateDto, req.user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.transactionService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  async remove(@Param('id') id: string, @Request() req) {
+    return this.transactionService.remove(+id, req.user);
   }
 }
