@@ -1,16 +1,16 @@
-import { IsDecimal, IsEnum, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsDate, IsDecimal, IsEnum, IsNotEmpty } from 'class-validator';
 import { ExpenseCategory } from 'src/common/enums/expense-category.enum';
 
 export class CreateCategorizedBudgetDto {
   @IsEnum(ExpenseCategory)
   @IsNotEmpty()
-  category: string;
+  category: ExpenseCategory;
 
   @IsDecimal()
   @IsNotEmpty()
   amount: number;
 
-  @IsUUID()
+  @IsDate()
   @IsNotEmpty()
-  budgetId: string;
+  date: Date;
 }
