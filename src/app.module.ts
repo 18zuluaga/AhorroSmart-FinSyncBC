@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { BudgetModule } from './budget/budget.module';
 import { CategorizeBudgetModule } from './categorize-budget/categorize-budget.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 @Module({
   imports: [
@@ -16,6 +18,12 @@ import { CategorizeBudgetModule } from './categorize-budget/categorize-budget.mo
     BudgetModule,
     CategorizeBudgetModule,
     TransactionModule,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
   ],
 })
 export class AppModule {}

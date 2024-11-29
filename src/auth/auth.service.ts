@@ -40,11 +40,6 @@ export class AuthService {
           'User not found, Verify your credentials or contact your administrator to register',
         );
       }
-      if (!user.name || !user.email) {
-        throw new UnauthorizedException(
-          'Please complete your account information to continue',
-        );
-      }
       delete user.password;
       return user;
     } catch (error) {
@@ -59,7 +54,13 @@ export class AuthService {
         user.password,
       );
 
+      console.log(user);
+      
+
       const payload = { ...verifiedUser };
+
+      console.log(payload);
+      
 
       return {
         token: this.jwtService.sign(payload),
@@ -79,14 +80,14 @@ export class AuthService {
       });
 
       delete newUser.password;
-      const token = this.login({
+      const token = await this.login({
         email: newUser.email,
         password: userDto.password,
       });
 
       return {
         user: newUser,
-        token,
+        token: token.token,
       };
     } catch (error) {
       throw error;

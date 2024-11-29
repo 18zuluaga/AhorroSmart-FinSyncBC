@@ -23,11 +23,11 @@ export class TransactionService {
   }
 
   async findAll(user: User) {
-    return await this.transactionRepository.find({ where: { user } });
+    return await this.transactionRepository.find({ where: { user: { id: user.id } } });
   }
 
   async findOne(id: number, user: User) {
-    const transaction = await this.transactionRepository.findOne({ where: { id, user } });
+    const transaction = await this.transactionRepository.findOne({ where: { id, user: { id: user.id } } });
 
     if (!transaction) {
       throw new NotFoundException(`Transaction with ID ${id} not found.`);

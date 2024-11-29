@@ -23,7 +23,8 @@ export class Transaction {
   @Column({ type: 'text', nullable: true })
   note: string;
 
-  @ManyToOne(() => User, (user) => user.transactions, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.transactions, { onDelete: 'CASCADE', eager: true })
+  @JoinColumn({name: 'user_id'})
   user: User;
 
   @ManyToOne(() => CategorizedBudget, (categorizedBudget) => categorizedBudget.transactions, { onDelete: 'CASCADE', eager: true })
