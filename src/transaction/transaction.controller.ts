@@ -17,8 +17,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagg
 
 @Controller('transactions')
 @ApiTags('Transactions')
-@ApiBearerAuth('JWT')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth('access-token')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 

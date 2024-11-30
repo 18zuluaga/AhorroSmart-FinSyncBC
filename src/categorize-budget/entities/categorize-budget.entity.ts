@@ -20,13 +20,13 @@ export class CategorizedBudget {
   @Column({ type: 'varchar', length: 255 })
   category: ExpenseCategory;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column()
   amount: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({ default: 0 })
   totalExpenses: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({ default: 0 })
   totalIncomes: number;
 
   @ManyToOne(() => Budget, (budget) => budget.categorizedBudgets, {

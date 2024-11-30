@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCategorizedBudgetDto } from './dto/create-categorize-budget.dto';
@@ -25,6 +29,27 @@ export class CategorizeBudgetService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+
+    createCategorizedBudgetDto.date = new Date(createCategorizedBudgetDto.date);
+    createCategorizedBudgetDto.date.setUTCDate(1);
+    createCategorizedBudgetDto.date.setUTCHours(0, 0, 0, 0);
+
+    console.log(createCategorizedBudgetDto.date);
+
+    const bugetCategory = await this.categorizedBudgetRepository.findOne({
+      where: {
+        category: createCategorizedBudgetDto.category,
+        budget: {
+          user: { id: user_id },
+          date: new Date(createCategorizedBudgetDto.date),
+        },
+      },
+    });    
+
+    if (bugetCategory) {
+      throw new ConflictException('Categorized budget already exists');
+    }
+
     const budget = await this.budgetService.createOrUpdate(
       {
         amount: createCategorizedBudgetDto.amount,
@@ -32,12 +57,30 @@ export class CategorizeBudgetService {
       },
       user_id,
     );
+
+    console.log(budget);
+
     const categorizedBudget = this.categorizedBudgetRepository.create({
       ...createCategorizedBudgetDto,
       budget,
     });
 
     return await this.categorizedBudgetRepository.save(categorizedBudget);
+  }
+
+  async findByDate(date: string, user_id: number) {
+    const dateParse = new Date(date);
+    dateParse.setUTCDate(1);
+    dateParse.setUTCHours(0, 0, 0, 0);
+    const categorizedBudget = await this.categorizedBudgetRepository.find({
+      where: { budget: { user: { id: user_id }, date: dateParse } },
+    });
+
+    if (!categorizedBudget) {
+      throw new NotFoundException('Categorized budget not found');
+    }
+
+    return categorizedBudget;
   }
 
   async findAll(user_id: number) {
@@ -83,6 +126,8 @@ export class CategorizeBudgetService {
     updateCategorizeBudgetDto: UpdateCategorizeBudgetDto,
     user_id: number,
   ) {
+    console.log(updateCategorizeBudgetDto);
+
     const user: User = await this.userService.findOne(user_id);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -113,12 +158,15 @@ export class CategorizeBudgetService {
     ) {
       const budgetUpdate = await this.budgetService.update(
         categorizedBudget.budget.id,
-        {
-          totalExpenses:
-            updateCategorizeBudgetDto.newExpense + budget.totalExpenses,
-          totalIncomes:
-            updateCategorizeBudgetDto.newIncome + budget.totalIncomes,
-        },
+        updateCategorizeBudgetDto.newExpense
+          ? {
+              totalExpenses:
+                updateCategorizeBudgetDto.newExpense + budget.totalExpenses,
+            }
+          : {
+              totalIncomes:
+                updateCategorizeBudgetDto.newIncome + budget.totalIncomes,
+            },
         user_id,
       );
       if (!budgetUpdate.affected) {

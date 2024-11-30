@@ -13,8 +13,11 @@ import { BudgetService } from './budget.service';
 import { CreateBudgetDto } from './dto/create-budget.dto';
 import { UpdateBudgetDto } from './dto/update-budget.dto';
 import { JwtAuthGuard } from 'src/auth/guards/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('budget')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth('access-token')
 export class BudgetController {
   constructor(private readonly budgetService: BudgetService) {}
 
@@ -28,6 +31,7 @@ export class BudgetController {
   @Get()
   findAll(@Request() req) {
     const user = req.user;
+    console.log(user);
     return this.budgetService.findAll(user.id);
   }
 

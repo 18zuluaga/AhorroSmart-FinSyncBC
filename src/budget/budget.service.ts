@@ -19,8 +19,10 @@ export class BudgetService {
   ) {}
 
   async create(createBudgetDto: CreateBudgetDto, user_id: number) {
-    const today = new Date(new Date().setDate(1));
-    createBudgetDto.date = new Date(new Date(createBudgetDto.date).setDate(1));
+    const today = new Date();
+    today.setUTCDate(1);
+    today.setUTCHours(0, 0, 0, 0);
+
     if (createBudgetDto.date < today) {
       throw new ConflictException('Date should be in the future');
     }
@@ -28,6 +30,15 @@ export class BudgetService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+
+    const existingBudget = await this.budgetRepository.findOne({
+      where: { date: createBudgetDto.date, user: { id: user_id } },
+    });
+
+    if (existingBudget) {
+      throw new ConflictException('Budget already exists for this month');
+    }
+
     const budget = await this.budgetRepository.create({
       ...createBudgetDto,
       user,
@@ -36,13 +47,18 @@ export class BudgetService {
   }
 
   async createOrUpdate(createBudgetDto: CreateBudgetDto, user_id: number) {
+
+    console.log(createBudgetDto.date);
+    
+
     const budget = await this.budgetRepository.findOne({
       where: { date: createBudgetDto.date, user: { id: user_id } },
     });
+
     if (budget) {
-      createBudgetDto.amount = budget.amount + createBudgetDto.amount;
+      // delete createBudgetDto.date;
       await this.update(budget.id, createBudgetDto, user_id);
-      return;
+      return await this.findOne(budget.id, user_id);
     } else {
       return await this.create(createBudgetDto, user_id);
     }
@@ -55,6 +71,8 @@ export class BudgetService {
     if (!Budget) {
       throw new NotFoundException('Budgets not found');
     }
+    console.log(budget);
+    
     return budget;
   }
 
@@ -79,6 +97,8 @@ export class BudgetService {
   }
 
   async update(id: number, updateBudgetDto: UpdateBudgetDto, user_id: number) {
+    console.log('updateBudgetDto', updateBudgetDto);
+
     const budget = await this.budgetRepository.findOne({
       where: { id, user: { id: user_id } },
     });
@@ -86,11 +106,16 @@ export class BudgetService {
       throw new NotFoundException('Budget not found');
     }
     if (updateBudgetDto.date) {
-      const toDay = new Date(new Date().setDate(1));
-      updateBudgetDto.date = new Date(new Date(updateBudgetDto.date));
-      if (updateBudgetDto.date < toDay) {
+      const today = new Date();
+      today.setUTCDate(1);
+      today.setUTCHours(0, 0, 0, 0);
+      if (updateBudgetDto.date < today) {
         throw new ConflictException('Date should be in the future');
       }
+      console.log(typeof budget.amount);
+      console.log(typeof updateBudgetDto.amount);
+      
+      updateBudgetDto.amount = budget.amount + updateBudgetDto.amount;
     }
     return await this.budgetRepository.update(id, updateBudgetDto);
   }

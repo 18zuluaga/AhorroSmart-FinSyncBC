@@ -14,7 +14,7 @@ export class Transaction {
   @Column({ type: 'enum', enum: ['Income', 'Expense'] })
   type: 'Income' | 'Expense';
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column()
   amount: number;
 
   @Column({ type: 'date' })

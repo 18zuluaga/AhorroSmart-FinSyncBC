@@ -17,6 +17,9 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       autoLoadEntities: true,
       synchronize: true,
       entities: [User, Budget, CategorizedBudget, Transaction],
+      extra: {
+        options: '-c timezone=utc',
+      },
     };
   }
 }

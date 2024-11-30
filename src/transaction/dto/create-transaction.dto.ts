@@ -19,4 +19,9 @@ export class CreateTransactionDto {
   @IsOptional()
   @IsString()
   note?: string;
+
+  @ApiProperty({ description: 'Categoría de la transacción', example: '1' })
+  @IsNumber()
+  @IsNotEmpty()
+  categorizedBudgetId?: number;
 }

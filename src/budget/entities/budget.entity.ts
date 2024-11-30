@@ -16,16 +16,16 @@ export class Budget {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column()
   amount: number;
 
-  @Column({ type: 'date' })
+  @Column()
   date: Date;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({ default: 0 })
   totalExpenses: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({ default: 0 })
   totalIncomes: number;
 
   @ManyToOne(() => User, (user) => user.budgets, { onDelete: 'CASCADE' })
