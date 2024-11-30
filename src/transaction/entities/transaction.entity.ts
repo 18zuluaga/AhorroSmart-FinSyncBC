@@ -6,7 +6,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, Up
 @Entity('transactions')
 export class Transaction {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ type: 'varchar', length: 255 })
   name: string;
@@ -14,7 +14,7 @@ export class Transaction {
   @Column({ type: 'enum', enum: ['Income', 'Expense'] })
   type: 'Income' | 'Expense';
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column()
   amount: number;
 
   @Column({ type: 'date' })
@@ -23,7 +23,8 @@ export class Transaction {
   @Column({ type: 'text', nullable: true })
   note: string;
 
-  @ManyToOne(() => User, (user) => user.transactions, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.transactions, { onDelete: 'CASCADE', eager: true })
+  @JoinColumn({name: 'user_id'})
   user: User;
 
   @ManyToOne(() => CategorizedBudget, (categorizedBudget) => categorizedBudget.transactions, { onDelete: 'CASCADE', eager: true })

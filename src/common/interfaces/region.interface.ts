@@ -1,4 +1,5 @@
-export interface LatLng {
-  latitude: number;
-  longitude: number;
+export interface JWTPayload {
+  id: number;
+  name: string;
+  email: string;
 }
