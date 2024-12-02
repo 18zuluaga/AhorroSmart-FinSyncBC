@@ -18,7 +18,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Ahorro Smart & FinSync API')
+    .setTitle('Ahorro Smart & FinSync API & FinTracker')
     .setDescription('')
     .setVersion('1.0')
     .addBearerAuth(

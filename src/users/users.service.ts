@@ -26,7 +26,6 @@ export class UserService {
   }
 
   async create(createUserDto: RegisterDto): Promise<User> {
-
     const user = await this.findOneByEmail(createUserDto.email);
 
     if (user) {
@@ -35,7 +34,7 @@ export class UserService {
 
     const newUser = this.userRepository.create(createUserDto);
 
-    return this.userRepository.save(newUser);
+    return await this.userRepository.save(newUser);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
