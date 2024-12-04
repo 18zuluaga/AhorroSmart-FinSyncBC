@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTransactionDto {
   @ApiProperty({ description: 'Nombre de la transacción', example: 'Pago de alquiler' })
@@ -24,4 +24,9 @@ export class CreateTransactionDto {
   @IsNumber()
   @IsNotEmpty()
   categorizedBudgetId?: number;
+
+  @ApiProperty({ description: 'Fecha de la transacción', example: '2021-01-01' })
+  @IsDateString()
+  @IsNotEmpty()
+  date: Date;
 }
