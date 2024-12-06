@@ -11,7 +11,7 @@ export class CreateTransactionDto {
   @IsEnum(['Income', 'Expense'])
   type: 'Income' | 'Expense';
 
-  @ApiProperty({ description: 'Monto de la transacción', example: 1000.50 })
+  @ApiProperty({ description: 'Monto de la transacción', example: 200000 })
   @IsNumber()
   amount: number;
 
@@ -25,7 +25,7 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   categorizedBudgetId?: number;
 
-  @ApiProperty({ description: 'Fecha de la transacción', example: '2021-01-01' })
+  @ApiProperty({ description: 'Fecha de la transacción', example: '2024-12-01' })
   @IsDateString()
   @IsNotEmpty()
   date: Date;

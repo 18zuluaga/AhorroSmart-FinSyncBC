@@ -174,10 +174,20 @@ export class CategorizeBudgetService {
       }
     }
 
-    categorizedBudget.totalExpenses =
-      categorizedBudget.totalExpenses + updateCategorizeBudgetDto.newExpense;
-    categorizedBudget.totalIncomes =
-      updateCategorizeBudgetDto.newIncome + categorizedBudget.totalIncomes;
+    console.log('totalExpenses', categorizedBudget.totalExpenses);
+    console.log('newExpense', updateCategorizeBudgetDto.newExpense);
+    
+
+    if(updateCategorizeBudgetDto.newExpense){
+      categorizedBudget.totalExpenses =
+        categorizedBudget.totalExpenses + updateCategorizeBudgetDto.newExpense;
+    }
+    if(updateCategorizeBudgetDto.newIncome){
+      categorizedBudget.totalIncomes =
+        updateCategorizeBudgetDto.newIncome + categorizedBudget.totalIncomes;
+    }
+    
+      console.log(categorizedBudget);
 
     return await this.categorizedBudgetRepository.update(
       id,

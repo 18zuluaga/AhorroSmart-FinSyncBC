@@ -29,9 +29,13 @@ export class TransactionService {
 
     const transactionDate = new Date(createTransactionDto.date);
     const currentDate = new Date();
+
+    console.log(transactionDate, currentDate);
+    console.log(transactionDate.getUTCMonth(), currentDate.getUTCMonth());
+
     if (
-      transactionDate.getFullYear() !== currentDate.getFullYear() ||
-      transactionDate.getMonth() !== currentDate.getMonth()
+      transactionDate.getUTCFullYear() !== currentDate.getUTCFullYear() ||
+      transactionDate.getUTCMonth() !== currentDate.getUTCMonth()
     ) {
       throw new BadRequestException('The date must be within the current month');
     }
