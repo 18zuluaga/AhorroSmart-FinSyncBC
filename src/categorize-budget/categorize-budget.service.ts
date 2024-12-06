@@ -181,7 +181,7 @@ export class CategorizeBudgetService {
 
     return await this.categorizedBudgetRepository.update(
       id,
-      updateCategorizeBudgetDto,
+      categorizedBudget,
     );
   }
 
