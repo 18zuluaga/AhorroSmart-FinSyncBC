@@ -94,7 +94,11 @@ export class BudgetService {
     if (!budget) {
       throw new NotFoundException('Budget not found');
     }
-    return budget;
+    return {
+      ...budget,
+      percentage: (budget.totalExpenses / budget.amount) * 100,
+      remaining: budget.amount - budget.totalExpenses,
+    };
   }
 
   async update(id: number, updateBudgetDto: UpdateBudgetDto, user_id: number) {
