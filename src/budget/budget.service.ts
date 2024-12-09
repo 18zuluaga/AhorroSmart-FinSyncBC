@@ -47,9 +47,7 @@ export class BudgetService {
   }
 
   async createOrUpdate(createBudgetDto: CreateBudgetDto, user_id: number) {
-
     console.log(createBudgetDto.date);
-    
 
     const budget = await this.budgetRepository.findOne({
       where: { date: createBudgetDto.date, user: { id: user_id } },
@@ -72,7 +70,7 @@ export class BudgetService {
       throw new NotFoundException('Budgets not found');
     }
     console.log(budget);
-    
+
     return budget;
   }
 
@@ -87,8 +85,11 @@ export class BudgetService {
   }
 
   async findByDate(date: Date, user_id: number) {
+    const dateParse = new Date(date);
+    dateParse.setUTCDate(1);
+    dateParse.setUTCHours(0, 0, 0, 0);
     const budget = await this.budgetRepository.findOne({
-      where: { date, user: { id: user_id } },
+      where: { date: dateParse, user: { id: user_id } },
     });
     if (!budget) {
       throw new NotFoundException('Budget not found');
@@ -114,7 +115,7 @@ export class BudgetService {
       }
       console.log(typeof budget.amount);
       console.log(typeof updateBudgetDto.amount);
-      
+
       updateBudgetDto.amount = budget.amount + updateBudgetDto.amount;
     }
     return await this.budgetRepository.update(id, updateBudgetDto);
