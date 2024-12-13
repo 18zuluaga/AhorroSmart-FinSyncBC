@@ -92,7 +92,7 @@ export class BudgetService {
     console.log(user_id);    
     const budget = await this.budgetRepository.findOne({
       where: { date: dateParse, user: { id: user_id } },
-      relations: ['categorizedBudgets', 'categorizedBudgets.transactions'],
+      relations: ['categorizedBudgets'],
     });
     if (!budget) {
       throw new NotFoundException('Budget not found');

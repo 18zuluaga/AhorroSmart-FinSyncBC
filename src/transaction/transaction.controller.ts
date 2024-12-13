@@ -9,11 +9,12 @@ import {
   UseGuards,
   Request,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { JwtAuthGuard } from 'src/auth/guards/auth.guard';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 
 @Controller('transactions')
 @ApiTags('Transactions')
@@ -31,11 +32,23 @@ export class TransactionController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Obtener todas las transacciones del usuario' })
+  @ApiOperation({ summary: 'Obtener transacciones filtradas por fecha opcional' })
+  @ApiQuery({
+    name: 'date',
+    required: false,
+    type: String,
+    description: 'Fecha opcional en formato ISO 8601 para filtrar las transacciones',
+  })
   @ApiResponse({ status: HttpStatus.OK, description: 'Listado de transacciones obtenido con éxito.' })
-  async findAll(@Request() req) {
-    return this.transactionService.findAll(req.user);
+  async findAll(
+    @Request() req,
+    @Query('date') date?: string,
+  ) {
+    const { user } = req;
+    const parsedDate = date ? new Date(date) : undefined;
+    return this.transactionService.findAll(user, parsedDate);
   }
+  
 
   @Get(':id')
   @ApiOperation({ summary: 'Obtener una transacción por ID' })

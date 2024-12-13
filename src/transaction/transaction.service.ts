@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { Transaction } from './entities/transaction.entity';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -37,9 +37,11 @@ export class TransactionService {
       transactionDate.getUTCFullYear() !== currentDate.getUTCFullYear() ||
       transactionDate.getUTCMonth() !== currentDate.getUTCMonth()
     ) {
-      throw new BadRequestException('The date must be within the current month');
+      throw new BadRequestException(
+        'The date must be within the current month',
+      );
     }
-  
+
     if (transactionDate > currentDate) {
       throw new BadRequestException('The date cannot be in the future');
     }
@@ -79,9 +81,27 @@ export class TransactionService {
     return await this.transactionRepository.save(transaction);
   }
 
-  async findAll(user: User) {
+  async findAll(user: User, date?: Date): Promise<Transaction[]> {
+    const whereClause: any = { user: { id: user.id } };
+
+    if (date) {
+      const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+      const endOfMonth = new Date(
+        date.getFullYear(),
+        date.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+        999,
+      );
+
+      whereClause.date = Between(startOfMonth, endOfMonth);
+    }
+
     return await this.transactionRepository.find({
-      where: { user: { id: user.id } },
+      where: whereClause,
+      order: { date: 'DESC' },
     });
   }
 
