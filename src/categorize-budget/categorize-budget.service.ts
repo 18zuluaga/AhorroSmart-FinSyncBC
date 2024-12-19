@@ -44,7 +44,7 @@ export class CategorizeBudgetService {
           date: new Date(createCategorizedBudgetDto.date),
         },
       },
-    });    
+    });
 
     if (bugetCategory) {
       throw new ConflictException('Categorized budget already exists');
@@ -127,73 +127,76 @@ export class CategorizeBudgetService {
     user_id: number,
   ) {
     console.log(updateCategorizeBudgetDto);
-
+  
     const user: User = await this.userService.findOne(user_id);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
+  
     const categorizedBudget = await this.categorizedBudgetRepository.findOne({
       where: { id, budget: { user: { id: user_id } } },
     });
-
+  
     if (!categorizedBudget) {
       throw new NotFoundException(`Categorized Budget #${id} not found`);
     }
-
+  
     const budget = await this.budgetService.findOne(
       categorizedBudget.budget.id,
       user_id,
     );
-
+  
     if (!budget) {
       throw new NotFoundException(
         `Budget #${categorizedBudget.budget.id} not found`,
       );
     }
-
-    if (
-      updateCategorizeBudgetDto.newExpense ||
-      updateCategorizeBudgetDto.newIncome
-    ) {
+  
+    if (updateCategorizeBudgetDto.newExpense !== undefined) {
+      const newTotalExpenses =
+        updateCategorizeBudgetDto.newExpense + budget.totalExpenses;
       const budgetUpdate = await this.budgetService.update(
         categorizedBudget.budget.id,
-        updateCategorizeBudgetDto.newExpense
-          ? {
-              totalExpenses:
-                updateCategorizeBudgetDto.newExpense + budget.totalExpenses,
-            }
-          : {
-              totalIncomes:
-                updateCategorizeBudgetDto.newIncome + budget.totalIncomes,
-            },
+        { totalExpenses: newTotalExpenses },
         user_id,
       );
       if (!budgetUpdate.affected) {
-        throw new Error('');
+        throw new Error('Error updating total expenses');
+      }
+      categorizedBudget.totalExpenses += updateCategorizeBudgetDto.newExpense;
+    }
+  
+    if (updateCategorizeBudgetDto.newIncome !== undefined) {
+      const newTotalIncomes =
+        updateCategorizeBudgetDto.newIncome + budget.totalIncomes;
+      const budgetUpdate = await this.budgetService.update(
+        categorizedBudget.budget.id,
+        { totalIncomes: newTotalIncomes },
+        user_id,
+      );
+      if (!budgetUpdate.affected) {
+        throw new Error('Error updating total incomes');
+      }
+      categorizedBudget.totalIncomes += updateCategorizeBudgetDto.newIncome;
+    }
+  
+    for (const [key, value] of Object.entries(updateCategorizeBudgetDto)) {
+      if (value !== undefined && key !== 'newExpense' && key !== 'newIncome') {
+        if (Object.prototype.hasOwnProperty.call(categorizedBudget, key)) {
+          categorizedBudget[key] = value;
+        } else {
+          console.warn(`Property ${key} does not exist on categorizedBudget`);
+        }
       }
     }
-
-    console.log('totalExpenses', categorizedBudget.totalExpenses);
-    console.log('newExpense', updateCategorizeBudgetDto.newExpense);
-    
-
-    if(updateCategorizeBudgetDto.newExpense){
-      categorizedBudget.totalExpenses =
-        categorizedBudget.totalExpenses + updateCategorizeBudgetDto.newExpense;
-    }
-    if(updateCategorizeBudgetDto.newIncome){
-      categorizedBudget.totalIncomes =
-        updateCategorizeBudgetDto.newIncome + categorizedBudget.totalIncomes;
-    }
-    
-      console.log(categorizedBudget);
-
-    return await this.categorizedBudgetRepository.update(
-      id,
-      categorizedBudget,
-    );
+  
+    console.log(categorizedBudget);
+  
+    await this.categorizedBudgetRepository.update(id, categorizedBudget);
+  
+    return await this.findOne(id, user_id);
   }
+  
 
   async remove(id: number, user_id: number) {
     const user: User = await this.userService.findOne(user_id);

@@ -61,6 +61,7 @@ export class CategorizeBudgetController {
   @ApiResponse({ status: 200, description: 'Categorized budget updated successfully.' })
   @ApiResponse({ status: 404, description: 'Categorized budget not found.' })
   update(@Param('id') id: string, @Body() updateCategorizeBudgetDto: UpdateCategorizeBudgetDto, @Request() req) {
+    console.log('updateCategorizeBudgetDto', updateCategorizeBudgetDto);    
     return this.categorizeBudgetService.update(+id, updateCategorizeBudgetDto, req.user.id);
   }
 

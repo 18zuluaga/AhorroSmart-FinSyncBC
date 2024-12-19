@@ -25,7 +25,7 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   categorizedBudgetId?: number;
 
-  @ApiProperty({ description: 'Fecha de la transacción', example: '2024-12-01' })
+  @ApiProperty({ description: 'Fecha de la transacción', example: '2024-12-18T23:59:28.366Z' })
   @IsDateString()
   @IsNotEmpty()
   date: Date;
