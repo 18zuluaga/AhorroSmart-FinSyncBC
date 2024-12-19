@@ -212,6 +212,29 @@ export class CategorizeBudgetService {
       throw new NotFoundException(`Categorized Budget #${id} not found`);
     }
 
+    const budget = await this.budgetService.findOne(
+      categorizedBudget.budget.id,
+      user_id,
+    );
+
+    if (!budget) {
+      throw new NotFoundException(`Budget #${categorizedBudget.budget.id} not found`);
+    }
+
+    const updatedBudget = await this.budgetService.update(
+      categorizedBudget.budget.id,
+      {
+        amount: budget.amount - categorizedBudget.amount,
+        totalExpenses: budget.totalExpenses - categorizedBudget.totalExpenses,
+        totalIncomes: budget.totalIncomes - categorizedBudget.totalIncomes,
+      },
+      user_id,
+    );
+
+    if (!updatedBudget) {
+      throw new NotFoundException(`error creating or updating budget`);
+    }
+
     await this.categorizedBudgetRepository.remove(categorizedBudget);
     return { message: `Categorized Budget #${id} has been removed` };
   }

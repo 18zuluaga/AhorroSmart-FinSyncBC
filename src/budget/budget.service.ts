@@ -54,7 +54,6 @@ export class BudgetService {
     });
 
     if (budget) {
-      // delete createBudgetDto.date;
       await this.update(budget.id, createBudgetDto, user_id);
       return await this.findOne(budget.id, user_id);
     } else {
